@@ -1,0 +1,26 @@
+pipeline{
+    agent any
+    triggers{
+        pollSCM('H/2 * * * * ')
+    }
+    environment{
+        name = "Santhosh"
+    }
+    stages{
+        stage('git cloning'){
+            steps{
+                git 'https://github.com/santhoshSan475/KavyaArivuNambi.git'
+            }
+        }
+        stage('sh whoami'){
+            steps{
+                sh 'whoami'
+            }
+        }
+        stage('current build number'){
+            steps{
+                echo "${env.name} CURRENT BUILD NUMBER ${BUILD_NUMBER}"
+            }
+        }
+    }
+}
