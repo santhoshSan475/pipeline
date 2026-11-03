@@ -3,6 +3,9 @@ pipeline{
     triggers{
         pollSCM('H/2 * * * * ')
     }
+    tools{
+      maven 'Maven3'
+    }
     environment{
         name = "Santhosh"
     }
@@ -15,6 +18,11 @@ pipeline{
         stage('sh whoami'){
             steps{
                 sh 'whoami'
+            }
+        }
+        stage('maven build'){
+            steps{
+                sh 'mvn clean install'
             }
         }
         stage('current build number'){
