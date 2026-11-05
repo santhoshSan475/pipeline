@@ -1,34 +1,48 @@
-pipeline{
+
+pipeline {
+
     agent any
-    triggers{
-        pollSCM('H/2 * * * * ')
+
+    options {
+        skipDefaultCheckout(true)
     }
-    tools{
-      maven 'Maven3'
-    }
-    environment{
-        name = "Santhosh"
-    }
-    stages{
-        stage('git cloning'){
-            steps{
-                git 'https://github.com/santhoshSan475/KavyaArivuNambi.git'
+
+    stages {
+
+        stage('Checkout Java Application') {
+            steps {
+                echo 'Fetching Java application from GitHub'
+
+                dir('java-app') {
+                    git branch: 'main',
+                        url: 'https://github.com/YOUR_USERNAME/java-calculator-app.git'
+                }
             }
         }
-        stage('sh whoami'){
-            steps{
-                sh 'whoami'
+
+        stage('Maven Build and Test') {
+            steps {
+                dir('java-app') {
+                    echo 'Starting Maven build and testing'
+
+                    sh 'mvn clean test'
+                }
             }
         }
-        stage('maven build'){
-            steps{
-                sh 'mvn clean install'
-            }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true,
+                  testResults: 'java-app/target/surefire-reports/*.xml'
         }
-        stage('current build number'){
-            steps{
-                echo "${env.name} CURRENT BUILD NUMBER ${BUILD_NUMBER}"
-            }
+
+        success {
+            echo 'All test cases passed successfully!'
+        }
+
+        failure {
+            echo 'Build or test execution failed!'
         }
     }
 }
