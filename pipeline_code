@@ -13,7 +13,7 @@ pipeline {
                 echo 'Fetching Java application from GitHub'
 
                 dir('java-app') {
-                    git branch: 'main',
+                    git branch: 'master',
                         url: 'https://github.com/santhoshSan475/java_aapplication.git'
                 }
             }
